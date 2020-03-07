@@ -28,6 +28,7 @@ gem 'jbuilder', '~> 2.7'
 
 
 gem 'graphql'
+gem 'graphql-batch'
 
 
 
