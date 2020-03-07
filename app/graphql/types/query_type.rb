@@ -6,6 +6,14 @@ module Types
     # TODO: remove me
     field :test_field, String, null: false,
       description: "An example field added by the generator"
+
+
+    field :products, [Types::ProductType], null: false
+
+    def products
+      Product.all
+    end
+
     def test_field
       "Hello World!"
     end
