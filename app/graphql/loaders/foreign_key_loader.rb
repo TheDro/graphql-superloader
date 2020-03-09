@@ -1,34 +1,43 @@
-
 module Loaders
   class ForeignKeyLoader < GraphQL::Batch::Loader
-    def initialize(object, field)
-      # @object = object
-      @model = object.class
-      @field = field
-      reflection =  @model.reflect_on_association(@field)
-      @target_model = reflection.klass
-      @foreign_key = reflection.foreign_key
+    class << self
+      def loader_key_for(*group_args)
+        [self].concat([group_args.first, group_args.last[:column]])
+      end
     end
 
-    def self.loader_key_for(object, field)
-      [self].concat([object.class, field])
+    def initialize(model, column: model.primary_key, scope: nil)
+      @model = model
+      @column = column.to_s
+      @column_type = model.type_for_attribute(@column)
+      @scope = scope
     end
 
-    def load(object)
-      super(object.id)
+    def load(key)
+      super(key)
     end
 
-    def perform(ids)
-      records = @target_model.where(@foreign_key => ids).each{}
-
+    def perform(keys)
+      records = query(keys)
       groups = records.group_by do |record|
-        record.public_send(@foreign_key)
+        # Loaders::RecordLoader.fulfill(record.class, record.id, record)
+        record.public_send(@column)
       end
-
       groups.each do |i, group|
-        fulfill(group.first.public_send(@foreign_key), group)
+        fulfill(group.first.public_send(@column), group)
       end
 
+      # Sets to fill if key was not found in query
+      keys.each { |key| fulfill(key, []) unless fulfilled?(key) }
+    end
+
+    private
+    def query(keys)
+      scope = @model
+      if @scope
+        scope = @scope
+      end
+      scope.where(@column => keys)
     end
   end
 end
