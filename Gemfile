@@ -30,6 +30,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'graphql'
 gem 'graphql-batch'
 
+gem 'awesome_print'
+
 
 
 # Reduces boot times through caching; required in config/boot.rb
