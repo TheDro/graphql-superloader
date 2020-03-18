@@ -10,6 +10,8 @@ module Types
 
     field :products, [Types::ProductType], null: false
     field :brands, [Types::BrandType], null: false
+    field :users, [Types::UserType], null: false
+
 
     def products
       Product.all
@@ -17,6 +19,10 @@ module Types
 
     def brands
       Brand.all
+    end
+
+    def users
+      User.all
     end
 
     def test_field
