@@ -16,10 +16,14 @@ module Loaders::SuperLoader
       Loaders::ForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
           .load(object.id)
     end
-
-    # Loaders::RecordLoader.for(Brand).load(object.brand_id)
-    # Loaders::RecordLoader.for(Product, :brand).load(object.brand_id)
-    # Loaders::ForeignKeyLoader.for(Brand, :products).load(object)
+    # Relations:
+    # belongs_to                 done
+    # has_many                   done
+    # has_many :through
+    # has_one
+    # has_one :through
+    # has_and_belongs_to_many
+    # polymorphic?
 
   end
 
