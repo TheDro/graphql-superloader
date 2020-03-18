@@ -1,12 +1,12 @@
 module Loaders
   class ForeignKeyLoader < GraphQL::Batch::Loader
     class << self
-      def loader_key_for(*group_args)
-        [self].concat([group_args.first, group_args.last[:column]])
+      def loader_key_for(model, column:, scope: nil)
+        [self, model, column, scope&.to_sql]
       end
     end
 
-    def initialize(model, column: model.primary_key, scope: nil)
+    def initialize(model, column:, scope: nil)
       @model = model
       @column = column.to_s
       @column_type = model.type_for_attribute(@column)

@@ -3,16 +3,18 @@ require './app/graphql/loaders/foreign_key_loader.rb'
 
 module Loaders::SuperLoader
 
-  def self.lazy_load(object, field)
+  def self.lazy_load(object, field, scope: nil)
 
     model = object.class
     reflection = model.reflect_on_association(field)
 
     case reflection
     when ActiveRecord::Reflection::BelongsToReflection
-      Loaders::RecordLoader.for(reflection.klass).load(object.public_send(reflection.foreign_key))
+      Loaders::RecordLoader.for(reflection.klass)
+          .load(object.public_send(reflection.foreign_key))
     when ActiveRecord::Reflection::HasManyReflection
-      Loaders::ForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key).load(object.id)
+      Loaders::ForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
+          .load(object.id)
     end
 
     # Loaders::RecordLoader.for(Brand).load(object.brand_id)
@@ -21,8 +23,8 @@ module Loaders::SuperLoader
 
   end
 
-  def lazy_loader(object, field)
-    Loaders::SuperLoader.lazy_load(object, field)
+  def lazy_loader(object, field, **args)
+    Loaders::SuperLoader.lazy_load(object, field, args)
   end
 
 end

@@ -9,9 +9,14 @@ module Types
 
 
     field :products, [Types::ProductType], null: false
+    field :brands, [Types::BrandType], null: false
 
     def products
       Product.all
+    end
+
+    def brands
+      Brand.all
     end
 
     def test_field
