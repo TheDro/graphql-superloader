@@ -1,8 +1,8 @@
 module Loaders
-  class ForeignKeyLoader < GraphQL::Batch::Loader
+  class FixedForeignKeyLoader < GraphQL::Batch::Loader
     class << self
       def loader_key_for(model, column:, scope: nil)
-        [self, model, column]
+        [self, model, column, scope&.to_sql]
       end
     end
 
