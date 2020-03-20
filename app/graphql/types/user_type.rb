@@ -8,6 +8,7 @@ module Types
     field :name, String, null: false
     field :favorite_brands, [Types::BrandType], null: false
     field :favorite_products, [Types::ProductType], null: false
+    field :wallet, Types::WalletType, null: true
 
     def favorite_brands
       Loaders::ManyToManyLoader.for(User, association_name: :favorite_brands).load(object)
@@ -15,6 +16,10 @@ module Types
 
     def favorite_products
       Loaders::ManyToManyLoader.for(User, association_name: :favorite_products).load(object)
+    end
+
+    def wallet
+      fixed_lazy_loader(object, :wallet)
     end
 
 

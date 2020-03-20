@@ -24,6 +24,11 @@ module Loaders::SuperLoader
       # end
       Loaders::FixedManyToManyLoader.for(model, column: model.primary_key, association_name: field, scope: scope)
           .load(object.id)
+    when ActiveRecrod::Reflection::HasOneReflection
+      Loaders::FixedForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
+          .load(object.id).then do |records|
+        records.first
+      end
     else
       byebug
     end
@@ -31,7 +36,7 @@ module Loaders::SuperLoader
     # belongs_to                 done
     # has_many                   done
     # has_many :through          done
-    # has_one
+    # has_one                    done
     # has_one :through
     # has_and_belongs_to_many
     # polymorphic?

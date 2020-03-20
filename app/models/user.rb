@@ -6,4 +6,6 @@ class User < ApplicationRecord
 
   has_many :users_favorite_products
   has_many :favorite_products, through: :users_favorite_products, source: :product
+
+  has_one :wallet
 end
