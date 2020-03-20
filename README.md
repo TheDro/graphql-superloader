@@ -1,24 +1,18 @@
-# README
+# GraphQL SuperLoader
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The purpose of this project is to create a batch loader for GraphQL that introspects the models passed in and automatically pick a suitable loader among:
 
-Things you may want to cover:
+- RecordLoader
+- ForeignKeyLoader
+- ManyToManyLoader
+- etc.
 
-* Ruby version
+This will make it easier to use loaders and reduce bugs caused by the improper use of loaders.
 
-* System dependencies
+## How to run
+Configure the database
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```terminal
+bin/rails 
+bin/rails s
+```
