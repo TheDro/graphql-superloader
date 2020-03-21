@@ -14,24 +14,31 @@ module Loaders::SuperLoader
     when ActiveRecord::Reflection::BelongsToReflection
       Loaders::RecordLoader.for(reflection.klass)
           .load(object.public_send(reflection.foreign_key))
+
     when ActiveRecord::Reflection::HasManyReflection
+      if !scope && reflection.type
+        scope = reflection.klass.where(reflection.type => model.to_s)
+      end
       Loaders::FixedForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
           .load(object.id)
+
     when ActiveRecord::Reflection::ThroughReflection
-      # linker = model.reflect_on_association(reflection.options[:through])
-      # Loaders::FixedForeignKeyLoader.for(linker.class, column: linker.foreign_key).load(object.id).then do |link_object|
-      #   Loaders::RecordLoader.for(reflection.klass).load(link_object.public_send(reflection.foreign_key))
-      # end
       Loaders::FixedManyToManyLoader.for(model, column: model.primary_key, association_name: field, scope: scope)
           .load(object.id)
-    when ActiveRecrod::Reflection::HasOneReflection
+
+    when ActiveRecord::Reflection::HasOneReflection
+      if !scope && reflection.type
+        scope = reflection.klass.where(reflection.type => model.to_s)
+      end
       Loaders::FixedForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
           .load(object.id).then do |records|
         records.first
       end
+
     else
       byebug
     end
+
     # Relations:
     # belongs_to                 done
     # has_many                   done
@@ -39,8 +46,10 @@ module Loaders::SuperLoader
     # has_one                    done
     # has_one :through
     # has_and_belongs_to_many
-    # polymorphic?
-
+    # polymorphic?               partial
+    #   has_many :as             done
+    #   has_one :as              done
+    #   complete polymorphic requires graphql interfaces... someday
   end
 
 

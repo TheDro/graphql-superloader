@@ -8,8 +8,14 @@ module Types
     field :price, Float, null: false
     field :brand, Types::BrandType, null: false
 
+    field :review, Types::ReviewType, null: true
+
     def brand
-      lazy_loader(object, :brand)
+      fixed_lazy_loader(object, :brand)
+    end
+
+    def review
+      fixed_lazy_loader(object, :review)
     end
 
   end
