@@ -12,7 +12,13 @@ module Loaders::SuperLoader
     # byebug
     case reflection
     when ActiveRecord::Reflection::BelongsToReflection
-      Loaders::RecordLoader.for(reflection.klass)
+      klass, options =
+        if reflection.polymorphic?
+          [object.public_send(reflection.foreign_type).constantize, {}]
+        else
+          [reflection.klass, column: reflection.join_primary_key]
+        end
+      Loaders::RecordLoader.for(klass, **options)
           .load(object.public_send(reflection.foreign_key))
 
     when ActiveRecord::Reflection::HasManyReflection
@@ -22,7 +28,7 @@ module Loaders::SuperLoader
       Loaders::FixedForeignKeyLoader.for(reflection.klass, column: reflection.foreign_key, scope: scope)
           .load(object.id)
 
-    when ActiveRecord::Reflection::ThroughReflection
+    when ActiveRecord::Reflection::HasAndBelongsToManyReflection, ActiveRecord::Reflection::ThroughReflection
       Loaders::FixedManyToManyLoader.for(model, column: model.primary_key, association_name: field, scope: scope)
           .load(object.id)
 
@@ -34,9 +40,9 @@ module Loaders::SuperLoader
           .load(object.id).then do |records|
         records.first
       end
-
     else
       byebug
+      #raise "Relation of type #{reflection.class} is not currently supported."
     end
 
     # Relations:
@@ -45,7 +51,7 @@ module Loaders::SuperLoader
     # has_many :through          done
     # has_one                    done
     # has_one :through
-    # has_and_belongs_to_many
+    # has_and_belongs_to_many    done
     # polymorphic?               partial
     #   has_many :as             done
     #   has_one :as              done
