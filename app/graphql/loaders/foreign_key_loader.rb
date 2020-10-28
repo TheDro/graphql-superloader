@@ -11,6 +11,11 @@ module Loaders
       @column = column.to_s
       @column_type = model.type_for_attribute(@column)
       @scope = scope
+      validate_args!
+    end
+
+    def validate_args!
+      raise ArgumentError, "Model must be a class" if @model.class != Class
     end
 
     def load(key)
