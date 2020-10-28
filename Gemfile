@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.7'
 
 gem 'graphql'
 gem 'graphql-batch'
+gem 'graphql-rails_logger'
 
 gem 'awesome_print'
 
