@@ -11,6 +11,8 @@ module Types
     field :products, [Types::ProductType], null: false
     field :brands, [Types::BrandType], null: false
     field :users, [Types::UserType], null: false
+    field :categories, [Types::CategoryType], null: false
+    field :reviews, [Types::ReviewType], null: false
 
 
     def products
@@ -23,6 +25,14 @@ module Types
 
     def users
       User.all
+    end
+
+    def categories
+      Category.all
+    end
+
+    def reviews
+      Review.all
     end
 
     def test_field

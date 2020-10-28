@@ -6,6 +6,11 @@ module Types
 
     field :comment, String, null: false
     field :rating, Float, null: false
+    field :reviewable, Types::Reviewable, null: false
+
+    def reviewable
+      fixed_lazy_loader(object, :reviewable)
+    end
 
   end
 end
