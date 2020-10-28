@@ -3,6 +3,7 @@ require './app/graphql/loaders/super_loader.rb'
 module Types
   class BrandType < Types::BaseObject
     include Loaders::SuperLoader
+    implements Types::Reviewable
 
     field :name, String, null: false
     field :products, [Types::ProductType], null: false

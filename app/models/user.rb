@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_many :favorite_products, through: :users_favorite_products, source: :product
 
   has_one :wallet
+  has_one :bank, through: :wallet
 end
